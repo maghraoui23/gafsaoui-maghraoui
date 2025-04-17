@@ -1,15 +1,191 @@
-: <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Carte</title>
-</head>
-<body>
-  <h1>Nos Plats</h1>
-  <ul>
-    <li>Pizza</li>
-    <li>Pâtes</li>
-    <li>Tacos</li>
-  </ul>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carte Interactive</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #333;
+      }
+
+      header {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #667eea;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: #667eea;
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+      }
+
+      .map-container {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      #map {
+        height: 600px;
+        width: 100%;
+        border-radius: 6px;
+      }
+
+      .controls {
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      button {
+        padding: 8px 16px;
+        background: #667eea;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background: #5a6fd1;
+      }
+
+      @media (max-width: 768px) {
+        nav {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+
+        .nav-links {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        #map {
+          height: 400px;
+        }
+
+        .controls {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">MonSite</div>
+        <div class="nav-links">
+          <a href="index.html">Accueil</a>
+          <a href="carte.html">Carte</a>
+          <a href="login.html">Connexion</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div class="map-container">
+        <div class="controls">
+          <button onclick="centerMap()">Centrer la carte</button>
+          <button onclick="toggleMarkers()">
+            Afficher/Masquer les marqueurs
+          </button>
+        </div>
+        <div id="map"></div>
+      </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+      let map;
+      let markers = [];
+      let markersVisible = true;
+
+      // Initialisation de la carte
+      function initMap() {
+        map = L.map("map").setView([34.7333, 10.7667], 13); // Coordonnées de Sfax
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "© OpenStreetMap contributors",
+        }).addTo(map);
+
+        // Ajout de quelques marqueurs d'exemple
+        addMarker(34.7333, 10.7667, "Centre-ville de Sfax");
+        addMarker(34.74, 10.76, "Point d'intérêt 1");
+        addMarker(34.73, 10.77, "Point d'intérêt 2");
+      }
+
+      function addMarker(lat, lng, title) {
+        const marker = L.marker([lat, lng]).bindPopup(title).addTo(map);
+        markers.push(marker);
+      }
+
+      function centerMap() {
+        map.setView([34.7333, 10.7667], 13);
+      }
+
+      function toggleMarkers() {
+        markersVisible = !markersVisible;
+        markers.forEach((marker) => {
+          if (markersVisible) {
+            marker.addTo(map);
+          } else {
+            marker.remove();
+          }
+        });
+      }
+
+      // Initialisation de la carte au chargement
+      window.onload = initMap;
+    </script>
+  </body>
 </html>
